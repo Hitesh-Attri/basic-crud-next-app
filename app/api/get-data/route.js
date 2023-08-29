@@ -2,9 +2,8 @@ import { NextResponse } from "next/server";
 import TestModel from "../../../models/testModel";
 import dbConnect from "@/config/db";
 
-dbConnect();
-
 export async function GET(req, res) {
+  await dbConnect();
   let list = await TestModel.find();
   // console.log(list);
 
