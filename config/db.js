@@ -5,35 +5,18 @@ if (!mongo_uri) {
   throw new Error("Please define the MONGO_URI environment.");
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-
 async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const options = {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-      // bufferCommands: false,
-      // bufferMaxEntries: 0,
-      // useFindAndModify: false,
-      // useCreateIndex: true,
-    };
-
-    cached.promise = mongoose.connect(mongo_uri, options).then((mongoose) => {
-      return mongoose;
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-    console.log("new conn");
+
+    console.log(`Mongo Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(`error: ${error.message}`);
+    process.exit();
   }
-  cached.conn = await cached.promise;
-  console.log("cached conn");
-  return cached.conn;
 }
 
 export default dbConnect;
