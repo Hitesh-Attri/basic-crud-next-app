@@ -13,16 +13,29 @@ export default function Home() {
   }, []);
 
   const getDataFunc = async () => {
-    axios
-      .get("/api/get-data")
-      .then((res) => {
-        console.log(res.data);
-        setData(res.data.list);
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("something went wrong");
+    // axios
+    //   .get("/api/get-data")
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     setData(res.data.list);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     alert("something went wrong");
+    //   });
+
+    try {
+      let res = await fetch("/api/get-data", {
+        cache: "no-store",
       });
+
+      res = await res.json();
+      console.log(res);
+      // setData(res.list);
+    } catch (error) {
+      console.log(error);
+      alert("something went wrong");
+    }
   };
   const postFunc = async () => {
     axios
